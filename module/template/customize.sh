@@ -71,15 +71,20 @@ extract "$ZIPFILE" 'daemon'          "$MODPATH"
 chmod 755 "$MODPATH/daemon"
 
 
-if [ "$ARCH" = "x64" ]; then
-  ui_print "- Extracting x64 libraries"
-  extract "$ZIPFILE" "lib/x86_64/lib$SONAME.so" "$MODPATH" true
-  extract "$ZIPFILE" "lib/x86_64/libinject.so" "$MODPATH" true
-else
-  ui_print "- Extracting arm64 libraries"
-  extract "$ZIPFILE" "lib/arm64-v8a/lib$SONAME.so" "$MODPATH" true
-  extract "$ZIPFILE" "lib/arm64-v8a/libinject.so" "$MODPATH" true
-fi
+case $ARCH in
+  "x64")
+    ui_print "- Extracting x64 libraries"
+    extract "$ZIPFILE" "lib/x86_64/lib$SONAME.so" "$MODPATH" true
+    extract "$ZIPFILE" "lib/x86_64/libinject.so" "$MODPATH" true ;;
+  "arm64")
+    ui_print "- Extracting arm64 libraries"
+    extract "$ZIPFILE" "lib/arm64-v8a/lib$SONAME.so" "$MODPATH" true
+    extract "$ZIPFILE" "lib/arm64-v8a/libinject.so" "$MODPATH" true ;;
+  "arm")
+    ui_print "- Extracting arm libraries"
+    extract "$ZIPFILE" "lib/armeabi-v7a/lib$SONAME.so" "$MODPATH" true
+    extract "$ZIPFILE" "lib/armeabi-v7a/libinject.so" "$MODPATH" true ;;
+esac
 
 mv "$MODPATH/libinject.so" "$MODPATH/inject"
 chmod 755 "$MODPATH/inject"
